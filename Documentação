@@ -1,0 +1,81 @@
+								###################  GERAL  ################### 
+
+Obs: Quando o cliente envia a requisição via HTTP entra na servlet que transforma os objetos do método
+acessado pela servlet em resposta ao usuário através do response. A servlet envia as requisições para a
+classe JSP, responsável pelo visual da tela.
+Obs: Geralmente  método doPost é a requisição do usuário e o método doGet a resposta enviada ao usuário.
+
+* HttpServletRequest (request) é o parâmetro que representa as requisições à nossa aplicação, ou seja, tudo que
+o cliente manda via URL será recebido por meio desse parâmetro.
+
+* HttpServletResponse (response) é o parâmetro que representa as respostas da nossa aplicação, ou seja, tudo que
+mandamos para o cliente será enviado por meio desse parâmetro.
+
+* doGet – Trata as conexões HTTP GET – Com passagem de parâmetros pela URL (visível ao usuário)
+Usado para acessar algum recurso.
+
+* doPost – Trata as conexões HTTP POST – Passagem de parâmetros pelo cabeçalho HTTP (invisível ao usuário)
+Usado para alterar ou criar algum recurso.
+
+* doPut – Trata as conexões HTTP PUT
+
+* doDelete – Trata as conexões HTTP DELETE
+
+WEB.XML – Classe responsável por especificar/mapear o caminho da URL declarando os elementos <servlet>.
+Nesta classe criamos uma servlet do tipo <servlet> que recebe um nome <servlet-name> e o nome da classe que
+será mapeada <servlet-class>. Criamos um <servlet-mapping> com o nome da servlet que será mapeada <servlet-name>
+e com a url padrão <servlet-pattern>.
+
+
+								***************** ARQUIVOS JSP *****************
+JSP significa Java Server Pages
+JSP é uma página automaticamente processada e transformada em Servlet pelo servidor Tomcat
+Para gerar HTML dinamicamente no JSP usamos Scriptlets
+Um scriptlet é um código Java dentro do HTML <% %>
+Usamos scrplets com = (ex: <%= %>) para obter o conteúdo dos atributos Java
+Um scriptlet só funciona em uma página JSP e com eles podemos configurar as libs e imports
+Expression Language (EL) é uma linguagem simples e limitada para imprimir o resultado de uma expressão
+EL usa a sintaxe de ${ ... }
+JSTL é a biblioteca padrão de tags
+JSTL não vem com Tomcat e precisamos copiar um JAR
+JSTL define 4 taglibs, as mais importantes são core (c:) e fmt (fmt:) a taglib core serve para controle
+de fluxo, fmt para formatação  e é preciso importar as taglib, core e fmt separadamente.
+JSTL e EL devem ser usados em conjunto
+vimos várias tags do core como c:if, c:forEach e c:url
+da fmt vimos a tag fmt:formatDate
+
+
+								***************** ARQUIVOS SERVLET *****************
+Servlet é uma classe Java que recebe uma requisição, processa essas requisições e produz um conteúdo dinâmico.
+Usamos o RequestDispatcher para despachar as solicitações para um JSP a partir da servlet.
+O RequestDispatcher pode chamar qualquer recurso acessível pela URL (uma página HTML, CSS, JavaScript, Servlet ou JSP).
+Obtemos o RequestDispatcher a partir do atributo request do tipo HttpServletRequest.
+Usamos o método sendRedirect para devolver uma resposta para o navegador, onde este ficará responsável por fazer um
+redirecionamento ao servlet, obtemos o método através do atributo response do tipo HttpServletResponse, para redirecionar
+pelo navegador usamos o método response.sendRedirect("endereço").
+
+
+								***************** CÓDIGOS DE ERROS/SUCESSO *****************
+404 é "Recurso não encontrado"
+405 é "Método HTTP não permitido"
+500 é "Erro interno no servidor"
+301 ou 302 é "Redirecionamento"
+Outro código famoso é o 200 que significa que a requisição executou com Sucesso!
+
+
+								***************** TOMCAT *****************
+Inversão de controle significa que não é meu método main que instancia objetos, quem se preocupa com a criação das instâncias
+é o Tomcat. O tomcat é o responsável por instanciar nossa servlet.
+O Tomcat só irá instanciar as servlets de acordo com a necessidade! Além disso, ele instanciará apenas uma servlet de cada
+(singleton).
+ O Tomcat só instancia a servlet quando realmente ocorre uma requisição. Isso é o comportamento padrão que podemos alterar
+ facilmente, usando a anotação @WebServlet que possui um atributo loadOnStartup que muda esse comportamento. Usando esse
+ atributo, ao reiniciarmos o Tomcat será criado o objeto da servlet OiMundoServlet e consequentemente aparece no console
+ a mensagem definida no construtor.
+ Ex: @WebServlet(urlPatterns="/oi", loadOnStartup=1)
+ WAR é o ZIP de projetos Java Web, que você roda de dentro de um servidor como o Tomcat. JAR é o ZIP para projetos comuns,
+ que não são Web.
+ 
+ 
+ 								***************** SOBRE O CURSO *****************
+ No documento Agenda.jsp fazemos o redirecionamento para o documento novo.html
