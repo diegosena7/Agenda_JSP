@@ -6,20 +6,28 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
-import com.mysql.cj.xdevapi.Result;
-
-/*
- * Classe responsável por coonectar com o BD
+/**
+ * The Class DAO - Classe responsável por conectar com o BD
  */
 public class DAO {
 	
-	//Parâmetros de conexão
+	/** The driver - Parâmetros de conexão*/
 	private String driver = "com.mysql.cj.jdbc.Driver";
+	
+	/** The url. */
 	private String url = "jdbc:mysql://localhost:3306/dbagenda?useTimezone=true&serverTimezone=UTC";
+	
+	/** The user. */
 	private String user = "dsena7";
+	
+	/** The password. */
 	private String password = "Santosfc@1912";
 	
-	//Método de Conexão
+	/**
+	 * Conectar.
+	 *
+	 * @return the connection
+	 */
 	private Connection conectar() {
 		Connection conn = null;
 		try {
@@ -33,20 +41,11 @@ public class DAO {
 		}
 	}
 	
-	//Testa conexão
-	public void testaConexao() {
-		try {
-			Connection conn = conectar();//executando a conexão
-			System.out.println(conn);
-			conn.close();
-		} catch (Exception e) {
-			System.out.println(e);
-			e.printStackTrace();
-		}
-	}
-	
-	
-	//CRUD CREATE
+	/**
+	 * Inserir contato.
+	 *
+	 * @param contato the contato
+	 */
 	public void inserirContato(JavaBeans contato) {
 		String create = "insert into contatos (nome, fone, email) values(?, ?, ?)";
 		try {
@@ -68,7 +67,11 @@ public class DAO {
 		}
 	}
 	
-	//CRUD READ (usado ArrayList para criar um vetor dinâmico)
+	/**
+	 * Listar contatos.
+	 * Usado ArrayList para criar um vetor dinâmico
+	 * @return the array list
+	 */
 	public ArrayList<JavaBeans> listarContatos(){
 		//Objeto de acesso a classe JavaBeans
 		ArrayList<JavaBeans> contatos = new ArrayList<>();
@@ -101,7 +104,11 @@ public class DAO {
 		}
 	}
 	
-	//CRUD UPDATE - Selecionando um contato
+	/**
+	 * Selecionar contato.
+	 *
+	 * @param contato the contato
+	 */
 	public void selecionarContato(JavaBeans contato) {
 		String update = "select * from contatos where idcon = ?";
 		try {
@@ -124,12 +131,16 @@ public class DAO {
 		}
 	}
 	
-	//Editar contato
+	/**
+	 * Alterar contato.
+	 *
+	 * @param contato the contato
+	 */
 	public void alterarContato(JavaBeans contato) {
-		String create = "update contatos set nome = ?, fone = ?, email = ? where idcon = ?";
+		String update = "update contatos set nome = ?, fone = ?, email = ? where idcon = ?";
 		try {
 			Connection con = conectar();
-			PreparedStatement pst = con.prepareStatement(create);
+			PreparedStatement pst = con.prepareStatement(update);
 			pst.setString(1, contato.getNome());
 			pst.setString(2, contato.getFone());
 			pst.setString(3, contato.getEmail());
@@ -142,7 +153,11 @@ public class DAO {
 		}
 	}
 	
-	//CRUD DELETE
+	/**
+	 * Deletar contato.
+	 *
+	 * @param contato the contato
+	 */
 	public void deletarContato(JavaBeans contato) {
 		String delete = "delete from contatos where idcon = ?";
 		try {

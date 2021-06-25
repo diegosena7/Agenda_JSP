@@ -19,29 +19,43 @@ import com.itextpdf.text.pdf.PdfWriter;
 import model.DAO;
 import model.JavaBeans;
 
+/**
+ * The Class Controller.
+ */
 @WebServlet(urlPatterns = { "/Controller", "/main", "/insert", "/select", "/update", "/delete", "/report" })//Caminho de acesso as requisições
 public class Controller extends HttpServlet {
 
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
+	/** The dao. */
 	DAO dao = new DAO();
+	
+	/** The contato. */
 	JavaBeans contato = new JavaBeans();
 
+	/**
+	 * Instantiates a new controller.
+	 */
 	public Controller() {
 	}
 
-	/*
+	/**
+	 * Do get.
 	 * Nesta classe fazemos o redirecionamento de acordo com o tipo de requisição feita ao servlet
+	 * @param request the request
+	 * @param response the response
+	 * @throws ServletException the servlet exception
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//Testando a conexão dao.testaConexao();
 		String action = request.getServletPath();//Atributo que recebe as requisições
 		System.out.println("Tipo de requisição do client: " + action);//Imprime o tipo de requisição da anotação @WebServlet
 
 		if (action.equals("/main")) {//redireciona a requisição feita através do main para o método interno contatos
 			contatos(request, response);
 		} else if (action.equals("/insert")) {
-			novoContato(request, response);
+			adicionarContato(request, response);
 		} else if (action.equals("/select")) {
 			listarContatos(request, response);
 		}else if (action.equals("/update")) {
@@ -55,9 +69,13 @@ public class Controller extends HttpServlet {
 		} 
 	}
 
-	/*
-	 * Nesta classe estamos listando os contatos e criando dinâmicamente os dados da agenda, dispachando a requisição
-	 * para a classe Agenda.jsp.
+	/**
+	 * Contatos.
+	 * Nesta classe estamos listando os contatos e criando dinâmicamente os dados da agenda, dispachando a requisição para a classe Agenda.jsp.
+	 * @param request the request
+	 * @param response the response
+	 * @throws ServletException the servlet exception
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	protected void contatos(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//Criando um objeto que recebe os dados JavaBenas
@@ -69,10 +87,15 @@ public class Controller extends HttpServlet {
 		rd.forward(request, response);//dispachando a requisição e a resposta a camada view (Agenda.jsp)
 	}
 
-	/*
+	/**
+	 * Adicionar contato.
 	 * Nesta classe estamos inserindo um novo contato em nossa lista de contatos
+	 * @param request the request
+	 * @param response the response
+	 * @throws ServletException the servlet exception
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
-	protected void novoContato(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void adicionarContato(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//Teste recebimento dos parâmetros
 		System.out.println(request.getParameter("nome"));
 		System.out.println(request.getParameter("email"));
@@ -90,16 +113,18 @@ public class Controller extends HttpServlet {
 		response.sendRedirect("main");
 	}
 	
-	/*
+	/**
+	 * Listar contatos.
 	 * Nesta classe estamos selecionando um contato em nossa lista de contatos através do id
+	 * @param request the request
+	 * @param response the response
+	 * @throws ServletException the servlet exception
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	protected void listarContatos(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//Recebe o id do contato a ser editado via parâmetro da classe Agenda.jsp
-		String idcon = request.getParameter("idcon");
-		System.out.println("Id: " + idcon);
 		
-		//Seta o atributo idcon recebido da view na variável da classe JavaBens
-		contato.setIdcon(idcon);
+		//Recebe o id do contato a ser editado via parâmetro da classe Agenda.jsp e seta o atributo idcon recebido da view na variável da classe JavaBens
+		contato.setIdcon(request.getParameter("idcon"));
 		
 		//Executa a seleção do contato
 		dao.selecionarContato(contato);
@@ -115,17 +140,15 @@ public class Controller extends HttpServlet {
 		rd.forward(request, response);
 	}
 	
-	
-	/*
+	/**
+	 * Editar contato.
 	 * Nesta classe estamos editando um contato em nossa lista de contatos através do idcon
+	 * @param request the request
+	 * @param response the response
+	 * @throws ServletException the servlet exception
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	protected void editarContato(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//Testa os parâmetros proveniente da requisição de update de dados na view
-		System.out.println(request.getParameter("idcon"));
-		System.out.println(request.getParameter("nome"));
-		System.out.println(request.getParameter("fone"));
-		System.out.println(request.getParameter("email"));
-		
 		//Seta os atributos recebidos da view nas variáveis da classe JavaBens
 		contato.setIdcon(request.getParameter("idcon"));
 		contato.setNome(request.getParameter("nome"));
@@ -139,15 +162,17 @@ public class Controller extends HttpServlet {
 		response.sendRedirect("main");
 	}
 	
-	/*
+	/**
+	 * Remover contato.
 	 * Nesta classe estamos excluindo um contato em nossa lista de contatos através do idcon
+	 * @param request the request
+	 * @param response the response
+	 * @throws ServletException the servlet exception
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	protected void removerContato(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String idcon = request.getParameter("idcon");//Recebe o id do contato que será excluído
-		System.out.println(idcon);
-		
-		//Seta o atributo recebido da view na variável da classe JavaBens
-		contato.setIdcon(idcon);
+		//Recebe o id do contato que será excluído e seta o atributo recebido da view na variável da classe JavaBens
+		contato.setIdcon(request.getParameter("idcon"));
 		
 		//Executa o método deletarContato da classe DAO.java
 		dao.deletarContato(contato);
@@ -156,8 +181,13 @@ public class Controller extends HttpServlet {
 		response.sendRedirect("main");
 	}
 	
-	/*
+	/**
+	 * Gerar relatorio.
 	 * Nesta classe estamos gerando o relatório em PDF com os contatos
+	 * @param request the request
+	 * @param response the response
+	 * @throws ServletException the servlet exception
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	protected void gerarRelatorio(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Document documento = new Document();

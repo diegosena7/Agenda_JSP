@@ -1,5 +1,6 @@
 /**
  * Validação de formulário
+ * Criamos a função validar que faz a validação de iputs do formulário
  *	@author Diego Sena
  */
 
